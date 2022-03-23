@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- #11.2 aop 빈등록 -->
+	<!-- a. XML등록방식 -->
+<!-- 	
+	<bean id="logginAspect" class="com.kh.spring.common.aop.LoginAspect" />
+	<aop:config>
+		<aop:aspect id="logginAspect" ref="logginAspect">
+			<aop:pointcut expression="execution(* com.kh.spring.memo..*(..))" id="loggingPointcut"/>
+			<aop:around method="logger" pointcut-ref="loggingPointcut"/>
+		</aop:aspect>
+	</aop:config> 
+	-->
+	
+	<!-- b. annotation등록 방식 -->
+	<!-- @Aspect, @Pointcut  advice관련 어노테이션 등록 -->
+	<aop:aspectj-autoproxy/>
+</beans>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 외부 properties 가져오기 -->
+	<context:property-placeholder location="classpath:datasource.properties"/>
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- #6.1 datasource & mybatis관련 빈 등록 -->
+	<bean 
+		class="org.apache.commons.dbcp.BasicDataSource"
+		id="realDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${datasource.driverClassName}"/>
+		<property name="url" value="${datasource.url}"/>
+		<property name="username" value="${datasource.username}"/>
+		<property name="password" value="${datasource.password}"/>
+	</bean>
+	<!-- #10.1 log4jdbc ProxyDataSource빈 설정 #realDataSource를 참조 -->
+        <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
+            <constructor-arg ref="realDataSource" />
+            <property name="logFormatter">
+                <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">    
+                    <property name="loggingType" value="MULTI_LINE" />
+                    <property name="sqlPrefix" value="[SQL] " />
+                </bean>
+            </property>
+        </bean>
+	<!-- #6.2. myBatis(JDBC)설정 : SqlSessionFactory -->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath*:mapper/**/*.xml"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	</bean>
+	<!-- #6.3. SqlSessionTemplate 마이바티스 스프링 연동모듈의 핵심기능. -->
+	<!-- SqlSessionTemplate : SqlSession 인터페이스를 구현클래스-->
+	<!-- 여러 dao에서 공유하므로 메모리관리에 있어 최적화된 테크닉. -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactoryBean"/>
+	</bean>
+	
+	<!-- #13.1 트랜잭션 매니저 빈 등록 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- #13.2 @Transactional 어노테이션 처리 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

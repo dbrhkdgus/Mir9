@@ -1,0 +1,87 @@
+@charset "UTF-8";
+/* modal customization */
+.modal .modal-dialog {
+    width: 800px;
+}
+.modal-header {
+    background:#d33724;
+    color:#fff;
+    border-top-left-radius:6px;
+    border-top-right-radius:6px;
+}
+/*.modal-body {
+    position:relative;
+    overflow-y:auto;
+	height: expression(this.scrollHeight > 599 ? "600px" : "auto" ); /* sets max-height for IE */
+/*    max-height:750px;	
+    padding:15px 10px;
+    background-color:#ffffff;
+}*/
+
+
+.modal-content
+{
+    background-color:transparent;
+}
+.modal-footer{
+    background:#ffffff;
+    text-align:center;
+    border-bottom-left-radius:6px;
+    border-bottom-right-radius:6px;
+}
+.modal .close, .modal .close:focus, .modal .close:hover {
+    color:#fff;
+    opacity:1;
+}
+
+/* table */
+.table-bordered thead tr {
+    font-weight:bold;
+    border: 1px solid #dddddd;
+    background-color:#f0efef;
+}
+.table-bordered .menu {
+    font-weight:bold;
+    background-color:#f0efef;
+    width:150px;
+    vertical-align:middle;
+}
+.table-bordered .content {
+    vertical-align:middle;
+}
+.table-bordered .menu_short {
+    font-weight:bold;
+    background-color:#f0efef;
+    width:100px;
+    vertical-align:middle;
+}
+.table-bordered tr {
+    text-align:center;
+}
+.table-bordered tr .money {
+    text-align:right;
+    vertical-align:middle;
+    padding-right:20px;
+}
+.table-bordered tr .count {
+    text-align:center;
+    vertical-align:middle;    
+}
+.table-bordered>thead>tr>td, .table-bordered>tbody>tr>td {
+    border: 1px solid #dddddd;
+}
+
+/* radio, checkbox */
+input[type=radio], input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+}
+
+/* blink */
+.blink {
+  animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {
+  50% { opacity: 0.0; }
+}

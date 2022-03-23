@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- #3.servlet-context관련 설정 : mvc관련처리 -->
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.naedam.mir9" />
+	
+	<!-- #9. HandlerInterceptor 등록 -->
+	<interceptors>
+		<interceptor>
+		<!-- /** level 수 상관없이 모든 요청 -->
+			<mapping path="/**"/>
+			<beans:bean  class="com.naedam.mir9.common.interceptor.LogInterceptor"/>
+		</interceptor>
+
+	</interceptors>
+	<!-- #12.1 파일 업로드를 처리할 Resolver빈 등록 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!-- multipart요청당 최대 파일 크기 : 50M(50 * 1024 * 1024) -->
+		<beans:property name="maxUploadSize" value="52428800"></beans:property>
+	<!-- 파일하 하나당 최대 파일 크기 : 10M(10 * 1024 * 1024) -->
+		<beans:property name="maxUploadSizePerFile" value="10485760"></beans:property>
+	</beans:bean>
+	
+	<!-- #14.1 jsonView 빈등록 -->
+	<beans:bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView">
+		<beans:property name="contentType" value="application/json; charset=utf-8"/>
+	</beans:bean>
+	
+	<!-- #14.2 BeanNameViewResolver 등록 -->
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<beans:property name="order" value="1"></beans:property>
+	</beans:bean>
+	
+	    <!-- 
+	    #15.1 @Responsebody사용을 위한 의존 : 빈등록 (스프링 5.x => MappingJackson2HttpMessageConverter) 
+	    3.1 이후는 mvc:annotation-driven태그에서 아래 설정을 대신함. 
+	    -->
+<!-- 	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+
+	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<beans:property name="messageConverters">
+			<beans:list>
+				<beans:ref bean="jacksonMessageConverter"/>
+                <beans:bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+			</beans:list>
+		</beans:property>
+	</beans:bean> -->
+	
+
+	
+</beans:beans>

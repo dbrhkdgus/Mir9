@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="option">
+
+  <insert id="insertOption">
+  	insert into product_option values(seq_product_option_no.nextval, #{option_name})
+  </insert>
+  
+  <insert id="insertOptionValue">
+  	insert into option_value values(seq_option_value_no.nextval, #{optionValue}, #{optionValueCost},(select	option_no from (select * from product_option order by 1 desc) where rownum = 1))
+  </insert>
+  
+  
+  <select id="selectOptionList" resultType="option">
+	select a.option_no, a.option_name, LISTAGG(b.option_value, ',') WITHIN GROUP (ORDER BY option_value) as option_values
+	from product_option a, option_value b
+	where a.option_no = b.option_no
+	group by a.option_no, a.option_name
+  </select>
+  
+  <select id="selectOneProductOptionByoptionNo" resultType="productOption">
+  	select * from product_option where option_no = #{optionNo}
+  </select>
+  
+  <select id="selectOptionValueListByOptionNo" resultType="optionValue">
+  	select * from option_value where option_no = #{optionNo}
+  </select>
+  
+  
+  <update id="updateOptionValue">
+  	update option_value set option_value = #{optionValue}, option_value_cost = #{optionValueCost} where option_value_no = #{optionValueNo}
+  </update>
+  <update id="updateProductOption">
+  	update product_option set option_name = #{optionName} where option_no = #{optionNo}
+  </update>
+</mapper>
